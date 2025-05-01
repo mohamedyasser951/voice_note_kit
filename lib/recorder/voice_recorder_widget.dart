@@ -325,7 +325,8 @@ class _VoiceRecorderWidgetState extends State<VoiceRecorderWidget> {
               boxShadow: _isRecording
                   ? [
                       BoxShadow(
-                          color: widget.cancelHintColor.withOpacity(0.4),
+                          color: widget.cancelHintColor
+                              .withAlpha((0.4 * 255).round()),
                           blurRadius: 8) // Add shadow when recording
                     ]
                   : [],

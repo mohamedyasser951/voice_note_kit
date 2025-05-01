@@ -93,8 +93,8 @@ class StyleTwoWidget extends StatelessWidget {
                     const SizedBox(width: 8.0),
                     if (showSpeedControl)
                       SpeedButton(
-                        backgroundColor:
-                            widget.backgroundColor.withOpacity(0.2),
+                        backgroundColor: widget.backgroundColor
+                            .withAlpha((0.2 * 255).round()),
                         currentSpeed: currentSpeed,
                         playbackSpeeds: playbackSpeeds,
                         setSpeed: setSpeed,

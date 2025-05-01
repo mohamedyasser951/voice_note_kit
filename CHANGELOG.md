@@ -5,3 +5,7 @@
 - Added comments in the code to make it clear
 - removed unnecessary code
 
+## 0.0.3
+- Replaced withOpacity to With Alpha
+- Decreased Minimum Dart SDK Version
+

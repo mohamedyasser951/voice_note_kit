@@ -79,7 +79,7 @@ class StyleFiveWidget extends StatelessWidget {
                       widget.shapeType == PlayIconShapeType.roundedRectangle
                           ? BorderRadius.circular(8.0)
                           : null,
-                  color: widget.iconColor.withOpacity(0.2),
+                  color: widget.iconColor.withAlpha((0.2 * 255).round()),
                 ),
                 child: RotatedBox(
                   quarterTurns:
@@ -111,8 +111,8 @@ class StyleFiveWidget extends StatelessWidget {
                       waveform: waveformData,
                       textDirection: widget.textDirection,
                       progress: progress,
-                      inactiveColor:
-                          widget.progressBarBackgroundColor.withOpacity(0.1),
+                      inactiveColor: widget.progressBarBackgroundColor
+                          .withAlpha((0.1 * 255).round()),
                       activeColor: widget.progressBarBackgroundColor,
                       onSeek: seekTo,
                     ),

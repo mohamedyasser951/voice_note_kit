@@ -43,8 +43,8 @@ class SpeedButton extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.0), // Rounded corners
           color: backgroundColor ??
-              iconColor.withOpacity(
-                  0.2), // Background color, defaulting to a translucent version of iconColor
+              iconColor.withAlpha((0.2 * 255)
+                  .round()), // Background color, defaulting to a translucent version of iconColor
         ),
         child: Text(
           // Display the current playback speed (e.g., '1.0x', '1.5x')

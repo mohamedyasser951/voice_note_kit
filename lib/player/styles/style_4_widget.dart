@@ -115,7 +115,9 @@ class StyleFourWidget extends StatelessWidget {
     return Text(
       formatDuration(duration),
       style: widget.timerTextStyle ??
-          TextStyle(color: widget.iconColor.withOpacity(0.7), fontSize: 14),
+          TextStyle(
+              color: widget.iconColor.withAlpha((0.7 * 255).round()),
+              fontSize: 14),
     );
   }
 }

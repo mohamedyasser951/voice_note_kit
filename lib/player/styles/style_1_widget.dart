@@ -76,7 +76,7 @@ class StyleOneWidget extends StatelessWidget {
                       widget.shapeType == PlayIconShapeType.roundedRectangle
                           ? BorderRadius.circular(8.0)
                           : null,
-                  color: widget.iconColor.withOpacity(0.2),
+                  color: widget.iconColor.withAlpha((0.2 * 255).round()),
                 ),
                 child: RotatedBox(
                   quarterTurns:
