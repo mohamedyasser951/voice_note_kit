@@ -17,6 +17,7 @@
 - [Example](#example)
 - [Dependencies Used](#dependencies-used)
 - [About the Developer](#about-the-developer)
+- [License](#license)
 
 ## Screenshots
 | ![App Screenshot 1](https://raw.githubusercontent.com/abdallahyassein-dev/voice_note_kit/main/screenshots/3.jpeg) | ![App Screenshot 2](https://raw.githubusercontent.com/abdallahyassein-dev/voice_note_kit/main/screenshots/2.jpeg) | ![App Screenshot 3](https://raw.githubusercontent.com/abdallahyassein-dev/voice_note_kit/main/screenshots/1.jpeg) |
@@ -179,7 +180,7 @@ AudioPlayerWidget(
 ## Example
 [You Can Find The Full Code Here](https://github.com/abdallahyassein-dev/voice_note_kit/tree/main/example)
 
-## 🔧 Dependencies Used (You do not have to import them)
+## Dependencies Used (You do not have to import them)
     This package uses:
     just_audio:
     just_waveform:
