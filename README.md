@@ -25,7 +25,7 @@
 
 ---
 
-## ✨ Features
+## Features
 
 - 🎤 Record audio: Capture high-quality audio using the device's microphone.
 - 💾 Save audio files locally: Store audio files locally on the device for later use.
@@ -40,7 +40,7 @@
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 1. **Add dependency:**
 In your `pubspec.yaml`:
@@ -94,7 +94,7 @@ post_install do |installer|
 end
 ```
 
-## 📚 Usage
+## Usage
 
 ### Voice Recorder
 
@@ -176,7 +176,7 @@ AudioPlayerWidget(
 ),
 ``` 
 
-## 🧪 Example
+## Example
 [You Can Find The Full Code Here](https://github.com/abdallahyassein-dev/voice_note_kit/tree/main/example)
 
 ## 🔧 Dependencies Used (You do not have to import them)
