@@ -15,7 +15,7 @@
   - [Voice Recorder](#voice-recorder)
   - [Audio Player](#audio-player)
 - [Example](#example)
-- [Dependencies Used](#dependencies-used-(-you-do-not-have-to-import-them))
+- [Dependencies Used](#dependencies-used)
 - [About the Developer](#about-the-developer)
 - [License](#license)
 
@@ -180,8 +180,8 @@ AudioPlayerWidget(
 ## Example
 [You Can Find The Full Code Here](https://github.com/abdallahyassein-dev/voice_note_kit/tree/main/example)
 
-## Dependencies Used (You do not have to import them)
-    This package uses:
+## Dependencies Used 
+    This package uses (You do not have to import them):
     just_audio:
     just_waveform:
     record:
