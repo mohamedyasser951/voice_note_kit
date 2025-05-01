@@ -2,10 +2,10 @@
 
 🎙️ **Voice Note Kit** is a Flutter plugin that allows you to record, save, and play voice notes with waveform visualization. It's built for mobile apps needing voice features like audio memos, task recordings, and more.
 
-<div style="display: flex; justify-content: center; gap: 10px;">
-  <img src="https://raw.githubusercontent.com/abdallahyassein-dev/voice_note_kit/main/screenshots/egypt_flag.jpg" width="50%" style="object-fit: cover; height: auto;" />
-  <img src="https://raw.githubusercontent.com/abdallahyassein-dev/voice_note_kit/main/screenshots/palestine_flag.png" width="50%" style="object-fit: cover; height: auto;" />
-</div>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/abdallahyassein-dev/voice_note_kit/main/screenshots/egypt_flag.jpg" width="45%" />
+  <img src="https://raw.githubusercontent.com/abdallahyassein-dev/voice_note_kit/main/screenshots/palestine_flag.png" width="45%" />
+</p>
 
 ## 📖 Table of Contents
 - [Screenshots](#screenshots)
