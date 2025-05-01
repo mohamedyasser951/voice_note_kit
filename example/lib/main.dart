@@ -2,7 +2,7 @@
 
 import 'dart:io'; // For handling recorded audio files
 import 'package:flutter/material.dart';
-import 'package:voice_note_kit/voice_note_kit.dart'; // Importing the custom package
+import 'package:voice_note_kit/voice_note_kit.dart'; // Importing the custom package for voice recording and playback
 
 void main() {
   runApp(const MyApp()); // Starting point of the app
@@ -16,9 +16,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: const Text('Voice Note Kit')),
+        appBar:
+            AppBar(title: const Text('Voice Note Kit')), // AppBar with title
         body:
-            const VoiceRecorderExample(), // Main screen that shows recorder & player
+            const VoiceRecorderExample(), // Main screen with the voice recorder & player widgets
       ),
     );
   }
@@ -33,7 +34,7 @@ class VoiceRecorderExample extends StatefulWidget {
 }
 
 class _VoiceRecorderExampleState extends State<VoiceRecorderExample> {
-  File? recordedFile; // To hold the recorded audio file locally
+  File? recordedFile; // Variable to hold the recorded audio file locally
 
   @override
   Widget build(BuildContext context) {
@@ -44,81 +45,107 @@ class _VoiceRecorderExampleState extends State<VoiceRecorderExample> {
           children: [
             // ------------------------ Recorder Section ------------------------
             VoiceRecorderWidget(
-              iconSize: 100,
-              showTimerText: true,
-              showSwipeLeftToCancel: true,
+              iconSize: 100, // Size of the recording icon
+              showTimerText: true, // Show the recording timer
+              showSwipeLeftToCancel:
+                  true, // Allow swipe left to cancel the recording
 
               // Optional: Add custom sounds for recording events
               // startSoundAsset: "assets/start_warning.mp3",
               // stopSoundAsset: "assets/start_warning.mp3",
 
-              // When recording is finished
+              // When recording is finished, save the file and display its path
               onRecorded: (file) {
                 setState(() {
-                  recordedFile = file;
+                  recordedFile = file; // Store the recorded file
                 });
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Recording saved: ${file.path}')),
+                  SnackBar(
+                      content: Text(
+                          'Recording saved: ${file.path}')), // Display the recorded file's path
                 );
               },
 
               // When error occurs during recording
               onError: (error) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Error: $error')),
+                  SnackBar(
+                      content: Text(
+                          'Error: $error')), // Display any errors during recording
                 );
               },
 
               // If recording was cancelled
               actionWhenCancel: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Recording Cancelled')),
+                  const SnackBar(
+                      content: Text(
+                          'Recording Cancelled')), // Notify the user that the recording was cancelled
                 );
               },
 
-              maxRecordDuration: const Duration(seconds: 60),
-              permissionNotGrantedMessage: 'Microphone permission required',
-              dragToLeftText: 'Swipe left to cancel recording',
+              maxRecordDuration: const Duration(
+                  seconds: 60), // Maximum recording duration (60 seconds)
+              permissionNotGrantedMessage:
+                  'Microphone permission required', // Message when permission is not granted
+              dragToLeftText:
+                  'Swipe left to cancel recording', // Text for drag-to-left action
               dragToLeftTextStyle: const TextStyle(
                 color: Colors.blueAccent,
                 fontSize: 18,
               ),
-              cancelDoneText: 'Recording cancelled',
-              backgroundColor: Colors.blueAccent,
-              cancelHintColor: Colors.red,
-              iconColor: Colors.white,
-              timerFontSize: 18,
+              cancelDoneText:
+                  'Recording cancelled', // Text displayed when recording is cancelled
+              backgroundColor:
+                  Colors.blueAccent, // Background color of the recorder widget
+              cancelHintColor: Colors.red, // Color of the cancel hint
+              iconColor: Colors.white, // Color of the record icon
+              timerFontSize: 18, // Font size of the timer
             ),
 
             const SizedBox(height: 10),
-            const Divider(),
+            const Divider(), // Divider between sections
             const SizedBox(height: 30),
 
             // ------------------------ URL Audio Playback Example ------------------------
             AudioPlayerWidget(
-              autoPlay: false,
-              autoLoad: true,
+              autoPlay: false, // Don't auto-play the audio
+              autoLoad:
+                  true, // Automatically load the audio when the widget is created
               audioPath:
-                  "https://commondatastorage.googleapis.com/codeskulptor-demos/riceracer_assets/fx/engine-10.ogg",
-              audioType: AudioType.url,
-              playerStyle: PlayerStyle.style5,
-              textDirection: TextDirection.rtl,
-              size: 60,
-              progressBarHeight: 5,
-              backgroundColor: Colors.blue,
-              progressBarColor: Colors.blue,
-              progressBarBackgroundColor: Colors.white,
-              iconColor: Colors.white,
-              shapeType: PlayIconShapeType.circular,
-              showProgressBar: true,
-              showTimer: true,
-              width: 300,
-              audioSpeeds: const [0.5, 1.0, 1.5, 2.0, 3.0],
-              onSeek: (value) => print('Seeked to: $value'),
-              onError: (message) => print('Error: $message'),
-              onPause: () => print("Paused"),
-              onPlay: (isPlaying) => print("Playing: $isPlaying"),
-              onSpeedChange: (speed) => print("Speed: $speed"),
+                  "https://commondatastorage.googleapis.com/codeskulptor-demos/riceracer_assets/fx/engine-10.ogg", // URL of the audio to play
+              audioType:
+                  AudioType.url, // Specify that the audio source is a URL
+              playerStyle: PlayerStyle.style5, // Player style for the widget
+              textDirection:
+                  TextDirection.rtl, // Set the text direction (Right to Left)
+              size: 60, // Size of the player widget
+              progressBarHeight: 5, // Height of the progress bar
+              backgroundColor: Colors.blue, // Background color of the player
+              progressBarColor: Colors.blue, // Color of the progress bar
+              progressBarBackgroundColor:
+                  Colors.white, // Background color of the progress bar
+              iconColor: Colors.white, // Color of the play/pause icon
+              shapeType: PlayIconShapeType
+                  .circular, // Shape type for the play/pause icon
+              showProgressBar: true, // Show the progress bar
+              showTimer: true, // Show the timer
+              width: 300, // Width of the player widget
+              audioSpeeds: const [
+                0.5,
+                1.0,
+                1.5,
+                2.0,
+                3.0
+              ], // Supported audio speeds
+              onSeek: (value) =>
+                  print('Seeked to: $value'), // Log the seeked position
+              onError: (message) => print('Error: $message'), // Log any errors
+              onPause: () => print("Paused"), // Log pause action
+              onPlay: (isPlaying) =>
+                  print("Playing: $isPlaying"), // Log play action
+              onSpeedChange: (speed) =>
+                  print("Speed: $speed"), // Log speed change
             ),
 
             const SizedBox(height: 30),
@@ -126,20 +153,26 @@ class _VoiceRecorderExampleState extends State<VoiceRecorderExample> {
             // ------------------------ Asset Audio Example (Style 5) ------------------------
             const AudioPlayerWidget(
               autoLoad: true,
-              audioPath: "assets/start_warning.mp3",
-              audioType: AudioType.assets,
-              textDirection: TextDirection.ltr,
-              size: 60,
-              progressBarHeight: 5,
-              backgroundColor: Color(0xff25D366),
-              progressBarColor: Color(0xff25D366),
-              progressBarBackgroundColor: Colors.white,
-              iconColor: Colors.white,
-              shapeType: PlayIconShapeType.circular,
-              playerStyle: PlayerStyle.style5,
-              width: 300,
-              showProgressBar: true,
-              showTimer: true,
+              audioPath:
+                  "assets/start_warning.mp3", // Path to an asset audio file
+              audioType:
+                  AudioType.assets, // Specify that the audio source is an asset
+              textDirection:
+                  TextDirection.ltr, // Set the text direction (Left to Right)
+              size: 60, // Size of the player widget
+              progressBarHeight: 5, // Height of the progress bar
+              backgroundColor:
+                  Color(0xff25D366), // Background color of the player
+              progressBarColor: Color(0xff25D366), // Color of the progress bar
+              progressBarBackgroundColor:
+                  Colors.white, // Background color of the progress bar
+              iconColor: Colors.white, // Color of the play/pause icon
+              shapeType: PlayIconShapeType
+                  .circular, // Shape type for the play/pause icon
+              playerStyle: PlayerStyle.style5, // Player style for the widget
+              width: 300, // Width of the player widget
+              showProgressBar: true, // Show the progress bar
+              showTimer: true, // Show the timer
             ),
 
             const SizedBox(height: 30),
@@ -148,40 +181,52 @@ class _VoiceRecorderExampleState extends State<VoiceRecorderExample> {
             recordedFile != null
                 ? AudioPlayerWidget(
                     autoLoad: true,
-                    audioPath: recordedFile?.path,
-                    size: 60,
-                    progressBarHeight: 7,
-                    backgroundColor: Colors.blueAccent,
-                    progressBarColor: Colors.blue,
-                    progressBarBackgroundColor: Colors.white,
-                    iconColor: Colors.white,
-                    shapeType: PlayIconShapeType.circular,
-                    playerStyle: PlayerStyle.style1,
-                    textDirection: TextDirection.rtl,
-                    width: 300,
-                    showProgressBar: true,
-                    showTimer: true,
+                    audioPath:
+                        recordedFile?.path, // Path to the recorded audio file
+                    size: 60, // Size of the player widget
+                    progressBarHeight: 7, // Height of the progress bar
+                    backgroundColor:
+                        Colors.blueAccent, // Background color of the player
+                    progressBarColor: Colors.blue, // Color of the progress bar
+                    progressBarBackgroundColor:
+                        Colors.white, // Background color of the progress bar
+                    iconColor: Colors.white, // Color of the play/pause icon
+                    shapeType: PlayIconShapeType
+                        .circular, // Shape type for the play/pause icon
+                    playerStyle:
+                        PlayerStyle.style1, // Player style for the widget
+                    textDirection: TextDirection
+                        .rtl, // Set the text direction (Right to Left)
+                    width: 300, // Width of the player widget
+                    showProgressBar: true, // Show the progress bar
+                    showTimer: true, // Show the timer
                   )
-                : const SizedBox.shrink(),
+                : const SizedBox
+                    .shrink(), // If no file is recorded, show an empty space
 
             const SizedBox(height: 30),
 
             // ------------------------ Asset Audio (Style 4) ------------------------
             const AudioPlayerWidget(
               autoLoad: true,
-              audioPath: "assets/start_warning.mp3",
-              audioType: AudioType.assets,
-              size: 30,
-              progressBarHeight: 5,
-              backgroundColor: Colors.blue,
-              progressBarColor: Color.fromARGB(255, 62, 167, 252),
-              progressBarBackgroundColor: Colors.white,
-              iconColor: Colors.white,
-              shapeType: PlayIconShapeType.circular,
-              playerStyle: PlayerStyle.stlye4,
-              width: 300,
-              showProgressBar: true,
-              showTimer: true,
+              audioPath:
+                  "assets/start_warning.mp3", // Path to an asset audio file
+              audioType:
+                  AudioType.assets, // Specify that the audio source is an asset
+              size: 30, // Size of the player widget
+              progressBarHeight: 5, // Height of the progress bar
+              backgroundColor: Colors.blue, // Background color of the player
+              progressBarColor: Color.fromARGB(
+                  255, 62, 167, 252), // Color of the progress bar
+              progressBarBackgroundColor:
+                  Colors.white, // Background color of the progress bar
+              iconColor: Colors.white, // Color of the play/pause icon
+              shapeType: PlayIconShapeType
+                  .circular, // Shape type for the play/pause icon
+              playerStyle: PlayerStyle.style4, // Player style for the widget
+              width: 300, // Width of the player widget
+              showProgressBar: true, // Show the progress bar
+              showTimer: true, // Show the timer
             ),
 
             const SizedBox(height: 30),
@@ -190,20 +235,26 @@ class _VoiceRecorderExampleState extends State<VoiceRecorderExample> {
             recordedFile != null
                 ? AudioPlayerWidget(
                     autoLoad: true,
-                    audioPath: recordedFile?.path,
-                    size: 60,
-                    progressBarHeight: 5,
-                    backgroundColor: Colors.blueAccent,
-                    progressBarColor: Colors.blue,
-                    progressBarBackgroundColor: Colors.white,
-                    iconColor: Colors.white,
-                    shapeType: PlayIconShapeType.circular,
-                    playerStyle: PlayerStyle.style2,
-                    width: 300,
-                    showProgressBar: true,
-                    showTimer: true,
+                    audioPath:
+                        recordedFile?.path, // Path to the recorded audio file
+                    size: 60, // Size of the player widget
+                    progressBarHeight: 5, // Height of the progress bar
+                    backgroundColor:
+                        Colors.blueAccent, // Background color of the player
+                    progressBarColor: Colors.blue, // Color of the progress bar
+                    progressBarBackgroundColor:
+                        Colors.white, // Background color of the progress bar
+                    iconColor: Colors.white, // Color of the play/pause icon
+                    shapeType: PlayIconShapeType
+                        .circular, // Shape type for the play/pause icon
+                    playerStyle:
+                        PlayerStyle.style2, // Player style for the widget
+                    width: 300, // Width of the player widget
+                    showProgressBar: true, // Show the progress bar
+                    showTimer: true, // Show the timer
                   )
-                : const SizedBox.shrink(),
+                : const SizedBox
+                    .shrink(), // If no file is recorded, show an empty space
 
             const SizedBox(height: 30),
 
@@ -211,20 +262,26 @@ class _VoiceRecorderExampleState extends State<VoiceRecorderExample> {
             recordedFile != null
                 ? AudioPlayerWidget(
                     autoLoad: true,
-                    audioPath: recordedFile?.path,
-                    size: 60,
-                    progressBarHeight: 5,
-                    backgroundColor: Colors.blueAccent,
-                    progressBarColor: Colors.blue,
-                    progressBarBackgroundColor: Colors.white,
-                    iconColor: Colors.white,
-                    shapeType: PlayIconShapeType.circular,
-                    playerStyle: PlayerStyle.style3,
-                    width: 300,
-                    showProgressBar: true,
-                    showTimer: true,
+                    audioPath:
+                        recordedFile?.path, // Path to the recorded audio file
+                    size: 60, // Size of the player widget
+                    progressBarHeight: 5, // Height of the progress bar
+                    backgroundColor:
+                        Colors.blueAccent, // Background color of the player
+                    progressBarColor: Colors.blue, // Color of the progress bar
+                    progressBarBackgroundColor:
+                        Colors.white, // Background color of the progress bar
+                    iconColor: Colors.white, // Color of the play/pause icon
+                    shapeType: PlayIconShapeType
+                        .circular, // Shape type for the play/pause icon
+                    playerStyle:
+                        PlayerStyle.style3, // Player style for the widget
+                    width: 300, // Width of the player widget
+                    showProgressBar: true, // Show the progress bar
+                    showTimer: true, // Show the timer
                   )
-                : const SizedBox.shrink(),
+                : const SizedBox
+                    .shrink(), // If no file is recorded, show an empty space
 
             const SizedBox(height: 60),
           ],

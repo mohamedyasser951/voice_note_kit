@@ -300,7 +300,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
           pauseAudio: _pauseAudio,
           seekTo: _seekTo,
         );
-      case PlayerStyle.stlye4:
+      case PlayerStyle.style4:
         return StyleFourWidget(
           widget: widget,
           isPlaying: _isPlaying,
@@ -318,23 +318,6 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
       case PlayerStyle.style5:
         return StyleFiveWidget(
           waveformData: _waveform.isEmpty ? dummyWaves : _waveform,
-          widget: widget,
-          isPlaying: _isPlaying,
-          progress: _progress,
-          position: _position,
-          duration: _duration,
-          showProgressBar: widget.showProgressBar,
-          showTimer: widget.showTimer,
-          currentSpeed: _currentSpeed,
-          showSpeedControl: widget.showSpeedControl,
-          playbackSpeeds: widget.audioSpeeds ?? const [0.5, 1.0, 1.5, 2.0],
-          setSpeed: _setSpeed,
-          playAudio: _playAudio,
-          pauseAudio: _pauseAudio,
-          seekTo: _seekTo,
-        );
-      default:
-        return StyleOneWidget(
           widget: widget,
           isPlaying: _isPlaying,
           progress: _progress,

@@ -10,16 +10,20 @@ import 'package:voice_note_kit/player/utils/format_duration.dart';
 import 'audio_recorder.dart';
 import 'sound_player.dart';
 
+// Main widget for voice recording functionality
 class VoiceRecorderWidget extends StatefulWidget {
+  // Callbacks and customizable widgets for the voice recorder widget
   final Function(File file)? onRecorded;
   final Function(String error)? onError;
   final Function()? onStartRecording;
   final Function()? actionWhenCancel;
   final Function()? onMaxDurationReached;
 
+  // Widgets to customize start and stop recording icons
   final Widget? startRecordingWidget;
   final Widget? stopRecordingWidget;
 
+  // Texts and style options for UI elements
   final String permissionNotGrantedMessage;
   final String recordCancelledMessage;
   final String cancelDoneText;
@@ -41,6 +45,7 @@ class VoiceRecorderWidget extends StatefulWidget {
 
   final Duration? maxRecordDuration;
 
+  // Optionally provided sound assets for starting and stopping recording
   final String? startSoundAsset;
   final String? stopSoundAsset;
 
@@ -77,142 +82,169 @@ class VoiceRecorderWidget extends StatefulWidget {
 }
 
 class _VoiceRecorderWidgetState extends State<VoiceRecorderWidget> {
-  final _recorder = AudioRecorderClass();
-  bool _isRecording = false;
-  bool _isCancelled = false;
-  String? _filePath;
-  double dragDistance = 0.0;
-  Offset? _startOffset;
-  Timer? _timer;
-  int _seconds = 0;
-  Color _backgroundColor = Colors.blueAccent;
-  bool _showCancelHint = false;
+  final _recorder = AudioRecorderClass(); // Audio recorder instance
+  bool _isRecording = false; // Whether the recorder is currently recording
+  bool _isCancelled = false; // Whether the recording was cancelled
+  String? _filePath; // File path for saving the recording
+  double dragDistance = 0.0; // Distance the user drags to cancel
+  Offset? _startOffset; // Start position of the drag gesture
+  Timer? _timer; // Timer to track recording duration
+  int _seconds = 0; // Recording duration in seconds
+  Color _backgroundColor =
+      Colors.blueAccent; // Background color during recording
+  bool _showCancelHint = false; // Flag to show hint for cancelling recording
 
+  // Dispose resources when the widget is destroyed
   @override
   void dispose() {
-    _recorder.dispose();
-    _timer?.cancel();
+    _recorder.dispose(); // Dispose recorder
+    _timer?.cancel(); // Cancel timer
     super.dispose();
   }
 
+  // Start recording logic
   Future<void> _startRecording() async {
     try {
-      final hasPermission = await _checkPermissions();
+      final hasPermission =
+          await _checkPermissions(); // Check microphone permission
       if (!hasPermission) {
-        widget.onError!(widget.permissionNotGrantedMessage);
+        widget.onError!(widget
+            .permissionNotGrantedMessage); // Show error if permission not granted
         return;
       }
 
-      widget.onStartRecording?.call();
+      widget.onStartRecording?.call(); // Trigger callback for start recording
 
       if (widget.enableHapticFeedback) {
-        HapticFeedback.mediumImpact();
+        HapticFeedback
+            .mediumImpact(); // Trigger haptic feedback when recording starts
       }
 
+      // Generate file path to save the audio
       final dir = await getTemporaryDirectory();
       _filePath = '${dir.path}/${DateTime.now().millisecondsSinceEpoch}.m4a';
 
+      // Play sound if provided when recording starts
       if (widget.startSoundAsset != null) {
         _playAssetSound(widget.startSoundAsset!);
       }
 
+      // Start recording
       await _recorder.start(const RecordConfig(), path: _filePath!);
-      _startTimer();
+      _startTimer(); // Start the recording timer
 
       setState(() {
-        _isRecording = true;
+        _isRecording = true; // Update UI to show recording state
         _isCancelled = false;
         dragDistance = 0;
-        _backgroundColor = widget.cancelHintColor;
-        _showCancelHint = true;
+        _backgroundColor =
+            widget.cancelHintColor; // Change background color when recording
+        _showCancelHint = true; // Show cancel hint
       });
     } catch (e) {
-      widget.onError?.call(e.toString());
+      widget.onError?.call(e.toString()); // Handle errors
     }
   }
 
+  // Stop recording logic
   Future<void> _stopRecording() async {
     try {
-      _timer?.cancel();
+      _timer?.cancel(); // Stop the timer when recording is stopped
 
+      // Play sound if provided when recording stops
       if (widget.stopSoundAsset != null) {
         _playAssetSound(widget.stopSoundAsset!);
       }
 
+      // Stop the recorder
       await _recorder.stop();
 
       setState(() {
-        _isRecording = false;
+        _isRecording = false; // Update UI to show recording stopped
       });
 
+      // Trigger onRecorded callback with the saved file if recording is successful
       if (!_isCancelled && _filePath != null && widget.onRecorded != null) {
         widget.onRecorded!(File(_filePath!));
       }
     } catch (e) {
-      widget.onError?.call(e.toString());
+      widget.onError?.call(e.toString()); // Handle errors
     }
   }
 
+  // Cancel the recording logic
   void _cancelRecording() {
     try {
-      _isCancelled = true;
-      _timer?.cancel();
-      _recorder.stop();
+      _isCancelled = true; // Mark the recording as cancelled
+      _timer?.cancel(); // Stop the timer
+      _recorder.stop(); // Stop the recorder
       if (widget.enableHapticFeedback) {
-        HapticFeedback.mediumImpact();
+        HapticFeedback.mediumImpact(); // Trigger haptic feedback on cancel
       }
       setState(() {
-        _isRecording = false;
-        _backgroundColor = widget.backgroundColor;
-        _showCancelHint = false;
+        _isRecording = false; // Update UI to show recording is cancelled
+        _backgroundColor = widget.backgroundColor; // Reset background color
+        _showCancelHint = false; // Hide cancel hint
       });
       if (widget.actionWhenCancel != null) {
-        widget.actionWhenCancel!();
+        widget
+            .actionWhenCancel!(); // Trigger custom action when recording is cancelled
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(widget.recordCancelledMessage)),
+          SnackBar(
+              content: Text(
+                  widget.recordCancelledMessage)), // Show cancellation message
         );
       }
     } catch (e) {
-      widget.onError?.call(e.toString());
+      widget.onError?.call(e.toString()); // Handle errors
     }
   }
 
+  // Start the timer for the recording duration
   void _startTimer() {
-    _seconds = 0;
+    _seconds = 0; // Reset timer to 0
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() => _seconds++);
+      setState(() => _seconds++); // Increment timer every second
+      // Stop recording if max duration is reached
       if (widget.maxRecordDuration != null &&
           _seconds >= widget.maxRecordDuration!.inSeconds) {
         _stopRecording();
-        widget.onMaxDurationReached?.call();
+        widget.onMaxDurationReached
+            ?.call(); // Trigger callback when max duration is reached
       }
     });
   }
 
+  // Check for microphone permission
   Future<bool> _checkPermissions() async {
     final mic = await Permission.microphone.request();
-    return mic == PermissionStatus.granted;
+    return mic ==
+        PermissionStatus.granted; // Return true if permission is granted
   }
 
+  // Play the sound asset (e.g., when starting or stopping recording)
   Future<void> _playAssetSound(String assetPath) async {
     try {
-      await playSound(assetPath);
+      await playSound(assetPath); // Play the sound
     } catch (e) {
-      widget.onError?.call(e.toString());
+      widget.onError?.call(e.toString()); // Handle errors
     }
   }
 
+  // Build the UI for the voice recorder widget
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      // Start recording when long press starts
       onLongPressStart: (details) {
         _startOffset = details.globalPosition;
         _startRecording();
         setState(() {
-          _showCancelHint = true;
+          _showCancelHint = true; // Show the cancel hint
         });
       },
+      // Update drag distance and cancel recording if dragged far enough
       onLongPressMoveUpdate: (details) {
         if (widget.showSwipeLeftToCancel &&
             _isRecording &&
@@ -220,29 +252,35 @@ class _VoiceRecorderWidgetState extends State<VoiceRecorderWidget> {
           double distance = details.globalPosition.dx - _startOffset!.dx;
 
           setState(() {
-            dragDistance = distance;
-            double percent = (distance.abs() / 100).clamp(0, 1);
+            dragDistance = distance; // Update drag distance
+            double percent = (distance.abs() / 100)
+                .clamp(0, 1); // Calculate cancellation percentage
             _backgroundColor = Color.lerp(
-                widget.cancelHintColor, widget.backgroundColor, 1 - percent)!;
+                widget.cancelHintColor,
+                widget.backgroundColor,
+                1 - percent)!; // Update background color
           });
 
+          // Cancel recording if dragged far enough
           if (distance < -70 && !_isCancelled) {
             _cancelRecording();
           }
         }
       },
+      // Stop recording if long press ends
       onLongPressEnd: (_) {
         if (!_isCancelled) {
           _stopRecording();
         }
         setState(() {
-          _showCancelHint = false;
-          _backgroundColor = widget.backgroundColor;
+          _showCancelHint = false; // Hide the cancel hint
+          _backgroundColor = widget.backgroundColor; // Reset background color
         });
       },
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          // Show cancel hint text when recording and swipe left to cancel
           if (_isRecording && _showCancelHint && widget.showSwipeLeftToCancel)
             Padding(
               padding: const EdgeInsets.only(bottom: 4.0),
@@ -256,13 +294,15 @@ class _VoiceRecorderWidgetState extends State<VoiceRecorderWidget> {
                     ),
               ),
             ),
+          // Show timer text when recording
           if (_isRecording && widget.showTimerText)
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
               child: Text(
                 _isCancelled
                     ? widget.cancelDoneText
-                    : formatDurationSeconds(_seconds),
+                    : formatDurationSeconds(
+                        _seconds), // Format the recording duration
                 style: widget.timerTextStyle ??
                     TextStyle(
                       color: widget.cancelHintColor,
@@ -271,21 +311,26 @@ class _VoiceRecorderWidgetState extends State<VoiceRecorderWidget> {
                     ),
               ),
             ),
+          // Animated container for the recording button
           AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             width: widget.iconSize,
             height: widget.iconSize,
             decoration: BoxDecoration(
-              color: _isRecording ? _backgroundColor : widget.backgroundColor,
-              shape: BoxShape.circle,
+              color: _isRecording
+                  ? _backgroundColor
+                  : widget
+                      .backgroundColor, // Change background color based on recording state
+              shape: BoxShape.circle, // Make the button circular
               boxShadow: _isRecording
                   ? [
                       BoxShadow(
                           color: widget.cancelHintColor.withOpacity(0.4),
-                          blurRadius: 8)
+                          blurRadius: 8) // Add shadow when recording
                     ]
                   : [],
             ),
+            // Show custom widgets for start/stop recording or default icon
             child: _isRecording && widget.stopRecordingWidget != null
                 ? widget.stopRecordingWidget
                 : !_isRecording && widget.startRecordingWidget != null
