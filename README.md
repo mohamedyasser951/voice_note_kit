@@ -15,7 +15,7 @@
   - [Voice Recorder](#voice-recorder)
   - [Audio Player](#audio-player)
 - [Example](#example)
-- [Dependencies Used](#dependencies-used)
+- [Dependencies Used](#dependencies-used-(-you-do-not-have-to-import-them))
 - [About the Developer](#about-the-developer)
 - [License](#license)
 
