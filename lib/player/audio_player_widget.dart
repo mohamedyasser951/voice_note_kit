@@ -6,7 +6,7 @@ import 'package:voice_note_kit/player/styles/style_2_widget.dart';
 import 'package:voice_note_kit/player/styles/style_1_widget.dart';
 import 'package:voice_note_kit/player/styles/style_4_widget.dart';
 import 'package:voice_note_kit/player/styles/style_5_widget.dart';
-import 'package:voice_note_kit/player/utils/dummy_Initial_waves.dart';
+import 'package:voice_note_kit/player/utils/dummy_initial_waves.dart';
 import 'package:voice_note_kit/player/utils/generate_waves_from_audio.dart';
 
 class AudioPlayerWidget extends StatefulWidget {
