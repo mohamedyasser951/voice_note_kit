@@ -11,3 +11,7 @@
 
 ## 0.0.5
 - Just Changed File Name
+
+
+## 1.0.0
+- Added Audio Player Controller

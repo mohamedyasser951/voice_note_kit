@@ -2,6 +2,7 @@
 
 import 'dart:io'; // For handling recorded audio files
 import 'package:flutter/material.dart';
+import 'package:voice_note_kit/player/utils/audio_player_controller.dart';
 import 'package:voice_note_kit/voice_note_kit.dart'; // Importing the custom package for voice recording and playback
 
 void main() {
@@ -35,6 +36,20 @@ class VoiceRecorderExample extends StatefulWidget {
 
 class _VoiceRecorderExampleState extends State<VoiceRecorderExample> {
   File? recordedFile; // Variable to hold the recorded audio file locally
+
+  late final VoiceNotePlayerController playerController;
+
+  @override
+  void initState() {
+    playerController = VoiceNotePlayerController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    playerController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -233,28 +248,52 @@ class _VoiceRecorderExampleState extends State<VoiceRecorderExample> {
 
             // ------------------------ Recorded Audio (Style 2) ------------------------
             recordedFile != null
-                ? AudioPlayerWidget(
-                    autoLoad: true,
-                    audioPath:
-                        recordedFile?.path, // Path to the recorded audio file
-                    size: 60, // Size of the player widget
-                    progressBarHeight: 5, // Height of the progress bar
-                    backgroundColor:
-                        Colors.blueAccent, // Background color of the player
-                    progressBarColor: Colors.blue, // Color of the progress bar
-                    progressBarBackgroundColor:
-                        Colors.white, // Background color of the progress bar
-                    iconColor: Colors.white, // Color of the play/pause icon
-                    shapeType: PlayIconShapeType
-                        .circular, // Shape type for the play/pause icon
-                    playerStyle:
-                        PlayerStyle.style2, // Player style for the widget
-                    width: 300, // Width of the player widget
-                    showProgressBar: true, // Show the progress bar
-                    showTimer: true, // Show the timer
+                ? Column(
+                    children: [
+                      AudioPlayerWidget(
+                        controller: playerController,
+                        autoLoad: true,
+                        audioPath: recordedFile?.path,
+                        size: 60,
+                        progressBarHeight: 5,
+                        backgroundColor: Colors.blueAccent,
+                        progressBarColor: Colors.blue,
+                        progressBarBackgroundColor: Colors.white,
+                        iconColor: Colors.white,
+                        shapeType: PlayIconShapeType.circular,
+                        playerStyle: PlayerStyle.style2,
+                        width: 300,
+                        showProgressBar: true,
+                        showTimer: true,
+                      ),
+                      const SizedBox(height: 10),
+                      Wrap(
+                        spacing: 10,
+                        alignment: WrapAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () => playerController.play(),
+                            child: const Text('Play'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () => playerController.pause(),
+                            child: const Text('Pause'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () => playerController
+                                .setSpeed(1.5), // Set speed to 1.5x(),
+                            child: const Text('Speed x1.5'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () =>
+                                playerController.seekTo(0.2), // Seek to 20%
+                            child: const Text('Seek to 20%'),
+                          ),
+                        ],
+                      ),
+                    ],
                   )
-                : const SizedBox
-                    .shrink(), // If no file is recorded, show an empty space
+                : const SizedBox.shrink(),
 
             const SizedBox(height: 30),
 

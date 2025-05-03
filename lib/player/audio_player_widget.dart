@@ -6,10 +6,14 @@ import 'package:voice_note_kit/player/styles/style_2_widget.dart';
 import 'package:voice_note_kit/player/styles/style_1_widget.dart';
 import 'package:voice_note_kit/player/styles/style_4_widget.dart';
 import 'package:voice_note_kit/player/styles/style_5_widget.dart';
+import 'package:voice_note_kit/player/utils/audio_player_controller.dart';
 import 'package:voice_note_kit/player/utils/dummy_initial_waves.dart';
 import 'package:voice_note_kit/player/utils/generate_waves_from_audio.dart';
 
 class AudioPlayerWidget extends StatefulWidget {
+  /// The controller for the audio player.
+  final VoiceNotePlayerController? controller;
+
   /// The path to the audio file (can be a URL, local path, or asset).
   final String? audioPath;
 
@@ -84,6 +88,7 @@ class AudioPlayerWidget extends StatefulWidget {
 
   const AudioPlayerWidget({
     super.key,
+    this.controller,
     this.autoLoad = true,
     this.autoPlay = false,
     this.textDirection = TextDirection.ltr,
@@ -129,6 +134,13 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
     super.initState();
 
     _audioPlayer = AudioPlayer();
+
+    widget.controller?.bind(
+      play: _playAudio,
+      pause: _pauseAudio,
+      seek: _seekTo,
+      setSpeed: _setSpeed,
+    );
 
     if (widget.autoLoad) {
       initializeFiles();
@@ -235,6 +247,12 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
   }
 
   Future<void> _seekTo(double value) async {
+    if (value > 1) {
+      value = 1;
+    }
+    if (value < 0) {
+      value = 0;
+    }
     final position = Duration(seconds: (value * _duration.inSeconds).toInt());
     if (widget.onSeek != null) {
       widget.onSeek!(value);

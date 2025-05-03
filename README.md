@@ -47,7 +47,7 @@
 In your `pubspec.yaml`:
 ```yaml
 dependencies:
-  voice_note_kit: ^0.0.1
+  voice_note_kit: ^1.0.0
 ```
 
 2. `Install Package` In your project:
@@ -176,6 +176,40 @@ AudioPlayerWidget(
         onSpeedChange: (speed) => print("Speed: $speed"), // Callback when playback speed is changed
 ),
 ``` 
+```dart
+
+// If You Want to User Controller For The Player
+
+  late final VoiceNotePlayerController playerController;
+
+  @override
+  void initState() {
+    playerController = VoiceNotePlayerController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    playerController.dispose();
+    super.dispose();
+  }
+
+  // Play the audio from the current position
+  playerController.play();
+
+  // Pause the audio playback
+  playerController.pause();
+
+  // Set the playback speed. Accepts a double value (e.g., 1.0 for normal speed, 1.5 for 1.5x speed)
+  playerController.setSpeed(1.5);
+
+  // Seek to a specific position in the audio. The value should be between 0 and 1, where 0 represents the beginning of the audio and 1 represents the end.
+  playerController.seekTo(0.2); // Seeks to 20% of the audio's total duration
+
+
+``` 
+
+
 
 ## Example
 [You Can Find The Full Code Here](https://github.com/abdallahyassein-dev/voice_note_kit/tree/main/example)
