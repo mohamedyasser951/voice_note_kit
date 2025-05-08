@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:voice_note_kit/player/player_enums/player_enums.dart';
@@ -7,8 +8,11 @@ import 'package:voice_note_kit/player/styles/style_1_widget.dart';
 import 'package:voice_note_kit/player/styles/style_4_widget.dart';
 import 'package:voice_note_kit/player/styles/style_5_widget.dart';
 import 'package:voice_note_kit/player/utils/audio_player_controller.dart';
+
 import 'package:voice_note_kit/player/utils/dummy_initial_waves.dart';
 import 'package:voice_note_kit/player/utils/generate_waves_from_audio.dart';
+
+import 'utils/blob_configuration/blob_configurations.dart';
 
 class AudioPlayerWidget extends StatefulWidget {
   /// The controller for the audio player.
@@ -150,6 +154,9 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
       _playAudio();
     }
     if (widget.playerStyle == PlayerStyle.style5) {
+      if (kIsWeb) {
+        return;
+      }
       _waveform = [];
       generateWaveform(widget.audioType, widget.audioPath).then((value) {
         setState(() {
@@ -213,6 +220,10 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
           await _audioPlayer.setFilePath(widget.audioPath!);
         } else if (widget.audioType == AudioType.url) {
           await _audioPlayer.setUrl(widget.audioPath!);
+        } else if (widget.audioType == AudioType.blobforWeb) {
+          final audioUrl = await getBlobUrl(widget.audioPath!);
+
+          await _audioPlayer.setUrl(audioUrl);
         }
         await _audioPlayer.setSpeed(_currentSpeed);
       }
@@ -335,7 +346,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
         );
       case PlayerStyle.style5:
         return StyleFiveWidget(
-          waveformData: _waveform.isEmpty ? dummyWaves : _waveform,
+          waveformData: kIsWeb || _waveform.isEmpty ? dummyWaves : _waveform,
           widget: widget,
           isPlaying: _isPlaying,
           progress: _progress,

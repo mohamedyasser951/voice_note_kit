@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
-import 'package:path_provider/path_provider.dart';
+
 import 'package:voice_note_kit/player/utils/format_duration.dart';
+import 'package:voice_note_kit/recorder/utils/utils_for_mobile.dart';
+import 'package:voice_note_kit/recorder/utils/utils_for_web.dart';
 import 'audio_recorder.dart';
 import 'sound_player.dart';
 
@@ -14,6 +17,7 @@ import 'sound_player.dart';
 class VoiceRecorderWidget extends StatefulWidget {
   // Callbacks and customizable widgets for the voice recorder widget
   final Function(File file)? onRecorded;
+  final Function(String url)? onRecordedWeb;
   final Function(String error)? onError;
   final Function()? onStartRecording;
   final Function()? actionWhenCancel;
@@ -51,7 +55,8 @@ class VoiceRecorderWidget extends StatefulWidget {
 
   const VoiceRecorderWidget({
     super.key,
-    required this.onRecorded,
+    this.onRecorded,
+    this.onRecordedWeb,
     this.onError,
     this.onStartRecording,
     this.actionWhenCancel,
@@ -120,9 +125,16 @@ class _VoiceRecorderWidgetState extends State<VoiceRecorderWidget> {
             .mediumImpact(); // Trigger haptic feedback when recording starts
       }
 
-      // Generate file path to save the audio
-      final dir = await getTemporaryDirectory();
-      _filePath = '${dir.path}/${DateTime.now().millisecondsSinceEpoch}.m4a';
+      if (kIsWeb) {
+        // Web-specific behavior: start recording without specifying path
+        _filePath = getTempFileForWeb();
+        await _recorder.start(const RecordConfig(), path: _filePath!);
+      } else {
+        // Mobile: save to file using path_provider
+
+        _filePath = await getTempFilePath();
+        await _recorder.start(const RecordConfig(), path: _filePath!);
+      }
 
       // Play sound if provided when recording starts
       if (widget.startSoundAsset != null) {
@@ -157,14 +169,21 @@ class _VoiceRecorderWidgetState extends State<VoiceRecorderWidget> {
       }
 
       // Stop the recorder
-      await _recorder.stop();
+      String filePath = await _recorder.stop();
 
       setState(() {
         _isRecording = false; // Update UI to show recording stopped
       });
 
       // Trigger onRecorded callback with the saved file if recording is successful
-      if (!_isCancelled && _filePath != null && widget.onRecorded != null) {
+      if (!_isCancelled &&
+          _filePath != null &&
+          widget.onRecorded != null &&
+          kIsWeb) {
+        widget.onRecordedWeb!(filePath);
+      } else if (!_isCancelled &&
+          _filePath != null &&
+          widget.onRecorded != null) {
         widget.onRecorded!(File(_filePath!));
       }
     } catch (e) {
@@ -218,6 +237,9 @@ class _VoiceRecorderWidgetState extends State<VoiceRecorderWidget> {
 
   // Check for microphone permission
   Future<bool> _checkPermissions() async {
+    if (Platform.isMacOS) {
+      return true;
+    }
     final mic = await Permission.microphone.request();
     return mic ==
         PermissionStatus.granted; // Return true if permission is granted

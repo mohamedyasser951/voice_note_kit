@@ -1,6 +1,6 @@
 name: voice_note_kit
 description: "A modern Flutter package to record and play voice notes with customizable UI, sound effects, and gestures."
-version: 1.0.0
+version: 1.2.0
 homepage: https://github.com/abdallahyassein-dev/voice_note_kit
 
 environment:
@@ -21,6 +21,12 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+
+platforms:
+  android:
+  ios:
+  web:
+  macos:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

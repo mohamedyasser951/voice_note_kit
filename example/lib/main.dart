@@ -37,6 +37,9 @@ class VoiceRecorderExample extends StatefulWidget {
 class _VoiceRecorderExampleState extends State<VoiceRecorderExample> {
   File? recordedFile; // Variable to hold the recorded audio file locally
 
+  String recordedAudioBlobUrl =
+      ""; // Variable to hold the recorded audio blob URL
+
   late final VoiceNotePlayerController playerController;
 
   @override
@@ -69,6 +72,14 @@ class _VoiceRecorderExampleState extends State<VoiceRecorderExample> {
               // startSoundAsset: "assets/start_warning.mp3",
               // stopSoundAsset: "assets/start_warning.mp3",
 
+              /////============================= WEB ONly =================================
+              // When recording is finished
+              onRecordedWeb: (url) {
+                setState(() {
+                  recordedAudioBlobUrl = url;
+                });
+              },
+              /////==============================================================
               // When recording is finished, save the file and display its path
               onRecorded: (file) {
                 setState(() {
@@ -122,45 +133,48 @@ class _VoiceRecorderExampleState extends State<VoiceRecorderExample> {
             const Divider(), // Divider between sections
             const SizedBox(height: 30),
 
-            // ------------------------ URL Audio Playback Example ------------------------
             AudioPlayerWidget(
-              autoPlay: false, // Don't auto-play the audio
+              autoPlay:
+                  false, // Whether to automatically start playback when the widget builds
               autoLoad:
-                  true, // Automatically load the audio when the widget is created
+                  true, // Whether to preload the audio before the user presses play
               audioPath:
-                  "https://commondatastorage.googleapis.com/codeskulptor-demos/riceracer_assets/fx/engine-10.ogg", // URL of the audio to play
-              audioType:
-                  AudioType.url, // Specify that the audio source is a URL
-              playerStyle: PlayerStyle.style5, // Player style for the widget
+                  "https://commondatastorage.googleapis.com/codeskulptor-demos/riceracer_assets/fx/engine-10.ogg", // The path or URL of the audio file
+              audioType: AudioType
+                  .url, // Specifies if the audio is from a URL, asset, or file
+              playerStyle: PlayerStyle
+                  .style1, // The visual style of the player (you can choose between different predefined styles)
               textDirection:
-                  TextDirection.rtl, // Set the text direction (Right to Left)
-              size: 60, // Size of the player widget
+                  TextDirection.rtl, // Text direction for RTL or LTR languages
+              size: 60, // Size of the play/pause button
               progressBarHeight: 5, // Height of the progress bar
-              backgroundColor: Colors.blue, // Background color of the player
-              progressBarColor: Colors.blue, // Color of the progress bar
+              backgroundColor: Colors.blue, // Background color of the widget
+              progressBarColor:
+                  Colors.blue, // Color of the progress bar (played portion)
               progressBarBackgroundColor:
                   Colors.white, // Background color of the progress bar
               iconColor: Colors.white, // Color of the play/pause icon
               shapeType: PlayIconShapeType
-                  .circular, // Shape type for the play/pause icon
-              showProgressBar: true, // Show the progress bar
-              showTimer: true, // Show the timer
-              width: 300, // Width of the player widget
+                  .circular, // Shape of the play/pause button (e.g., circular or square)
+              showProgressBar: true, // Whether to show the progress bar
+              showTimer: true, // Whether to display the current time/duration
+              width: 300, // Width of the whole audio player widget
               audioSpeeds: const [
                 0.5,
                 1.0,
                 1.5,
                 2.0,
                 3.0
-              ], // Supported audio speeds
-              onSeek: (value) =>
-                  print('Seeked to: $value'), // Log the seeked position
-              onError: (message) => print('Error: $message'), // Log any errors
-              onPause: () => print("Paused"), // Log pause action
-              onPlay: (isPlaying) =>
-                  print("Playing: $isPlaying"), // Log play action
-              onSpeedChange: (speed) =>
-                  print("Speed: $speed"), // Log speed change
+              ], // Supported audio playback speeds
+              onSeek: (value) => print(
+                  'Seeked to: $value'), // Callback when user seeks to a new position
+              onError: (message) =>
+                  print('Error: $message'), // Callback when an error occurs
+              onPause: () => print("Paused"), // Callback when audio is paused
+              onPlay: (isPlaying) => print(
+                  "Playing: $isPlaying"), // Callback when audio starts or resumes playing
+              onSpeedChange: (speed) => print(
+                  "Speed: $speed"), // Callback when playback speed is changed
             ),
 
             const SizedBox(height: 30),
@@ -321,6 +335,58 @@ class _VoiceRecorderExampleState extends State<VoiceRecorderExample> {
                   )
                 : const SizedBox
                     .shrink(), // If no file is recorded, show an empty space
+
+            const SizedBox(height: 30),
+            // ------------------------ URL Audio Playback Example FOR WEB ONLY ------------------------
+            recordedAudioBlobUrl.isNotEmpty
+                ? AudioPlayerWidget(
+                    autoPlay: false, // Don't auto-play the audio
+
+                    autoLoad:
+                        true, // Automatically load the audio when the widget is created
+                    audioPath: recordedAudioBlobUrl, // URL of the audio to play
+                    /////============================= Flutter WEB ONly =================================
+                    audioType: AudioType
+                        .blobforWeb, // Specify that the audio source is a URL
+
+                    /////============================= Style 5 is Not Suppoted for WEB =================================
+                    playerStyle:
+                        PlayerStyle.style1, // Player style for the widget
+                    textDirection: TextDirection
+                        .rtl, // Set the text direction (Right to Left)
+                    size: 60, // Size of the player widget
+                    progressBarHeight: 5, // Height of the progress bar
+                    backgroundColor:
+                        Colors.blueAccent, // Background color of the player
+                    progressBarColor: Colors.blue, // Color of the progress bar
+                    progressBarBackgroundColor:
+                        Colors.white, // Background color of the progress bar
+                    iconColor: Colors.white, // Color of the play/pause icon
+                    shapeType: PlayIconShapeType
+                        .circular, // Shape type for the play/pause icon
+                    showProgressBar: true, // Show the progress bar
+                    showTimer: true, // Show the timer
+                    width: 300, // Width of the player widget
+                    audioSpeeds: const [
+                      0.5,
+                      1.0,
+                      1.5,
+                      2.0,
+                      3.0
+                    ], // Supported audio speeds
+                    onSeek: (value) =>
+                        print('Seeked to: $value'), // Log the seeked position
+                    onError: (message) =>
+                        print('Error: $message'), // Log any errors
+                    onPause: () => print("Paused"), // Log pause action
+                    onPlay: (isPlaying) =>
+                        print("Playing: $isPlaying"), // Log play action
+                    onSpeedChange: (speed) =>
+                        print("Speed: $speed"), // Log speed change
+                  )
+                : const SizedBox.shrink(),
+
+            // ----------------------------------------------------------------
 
             const SizedBox(height: 60),
           ],

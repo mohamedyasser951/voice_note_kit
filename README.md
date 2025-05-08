@@ -47,7 +47,7 @@
 In your `pubspec.yaml`:
 ```yaml
 dependencies:
-  voice_note_kit: ^1.0.0
+  voice_note_kit: ^1.2.0
 ```
 
 2. `Install Package` In your project:
@@ -95,6 +95,30 @@ post_install do |installer|
 end
 ```
 
+
+5. `Macos Configuration:` In your Macos Info.plist, add:
+```
+<key>NSMicrophoneUsageDescription</key>
+<string>This app needs access to the microphone to record audio.</string>
+```
+In Your Podfile 
+
+```
+platform :osx, '10.15'
+```
+
+
+Open your macos/Runner/DebugProfile.entitlements and macos/Runner/Release.entitlements files.
+```
+<key>com.apple.security.device.audio-input</key>
+<true/>
+``` 
+
+
+
+
+
+
 ## Usage
 
 ### Voice Recorder
@@ -118,6 +142,13 @@ VoiceRecorderWidget(
             SnackBar(content: Text('Recording saved: ${file.path}')),
             );
         },
+
+        // For Flutter Web
+        onRecordedWeb: (url) {
+                setState(() {
+                  recordedAudioBlobUrl = url;
+                });
+              },
 
         // When error occurs during recording
         onError: (error) {
@@ -155,7 +186,7 @@ AudioPlayerWidget(
         autoLoad: true, // Whether to preload the audio before the user presses play
         audioPath:
             "https://commondatastorage.googleapis.com/codeskulptor-demos/riceracer_assets/fx/engine-10.ogg", // The path or URL of the audio file
-        audioType: AudioType.url, // Specifies if the audio is from a URL, asset, or file
+        audioType: AudioType.url, // Specifies if the audio is from a URL, asset, , file , or blobforWeb(for flutter web) 
         playerStyle: PlayerStyle.style5, // The visual style of the player (you can choose between different predefined styles)
         textDirection: TextDirection.rtl, // Text direction for RTL or LTR languages
         size: 60, // Size of the play/pause button

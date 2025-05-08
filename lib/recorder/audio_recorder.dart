@@ -25,13 +25,15 @@ class AudioRecorderClass {
   }
 
   /// Stops the audio recording.
-  Future<void> stop() async {
+  Future<String> stop({Function(String)? onWebCallback}) async {
     try {
       // Stop the recording
-      await _recorder.stop();
+      String filePath = await _recorder.stop() ?? "";
+      return filePath;
     } catch (e) {
       // Handle any errors that might occur while stopping the recording
       print("Error stopping audio recording: $e");
+      return "";
     }
   }
 

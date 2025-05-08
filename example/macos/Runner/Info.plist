@@ -28,5 +28,15 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Some message to describe why you need this permission</string>
+
+	  <key>com.apple.security.network.client</key>
+   	  <true/>
+
+
+
+	
 </dict>
 </plist>

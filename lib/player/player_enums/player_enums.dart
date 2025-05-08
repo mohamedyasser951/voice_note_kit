@@ -38,4 +38,6 @@ enum AudioType {
 
   /// An audio file accessed from a remote URL.
   url,
+
+  blobforWeb,
 }
