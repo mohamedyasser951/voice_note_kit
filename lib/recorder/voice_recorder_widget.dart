@@ -22,7 +22,7 @@ class VoiceRecorderBar extends StatefulWidget {
   final String? stopSoundAsset;
   final bool enableHapticFeedback;
   final Duration? maxRecordDuration;
-
+  final String? title;
   const VoiceRecorderBar({
     super.key,
     this.onRecorded,
@@ -34,6 +34,7 @@ class VoiceRecorderBar extends StatefulWidget {
     this.stopSoundAsset,
     this.enableHapticFeedback = true,
     this.maxRecordDuration,
+    this.title,
   });
 
   @override
@@ -135,83 +136,82 @@ class _VoiceRecorderBarState extends State<VoiceRecorderBar> {
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF8F9FB),
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            // Left side - Recording button
-            GestureDetector(
-              onTap: _isRecording ? _stopRecording : _startRecording,
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                decoration: BoxDecoration(
-                  color: _isRecording ? Colors.red : const Color(0xFF1A3353),
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color:
-                          (_isRecording ? Colors.red : const Color(0xFF1A3353))
-                              .withValues(alpha: 0.3),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                width: 36,
-                height: 36,
-                child: Icon(
-                  _isRecording ? Icons.stop : Icons.mic,
-                  color: Colors.white,
-                  size: 20,
-                ),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8F9FB),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          // Left side - Recording button
+          GestureDetector(
+            onTap: _isRecording ? _stopRecording : _startRecording,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              decoration: BoxDecoration(
+                color: _isRecording ? Colors.red : const Color(0xFF1A3353),
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: (_isRecording ? Colors.red : const Color(0xFF1A3353))
+                        .withValues(alpha: 0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              width: 38,
+              height: 38,
+              child: Icon(
+                _isRecording ? Icons.stop : Icons.mic,
+                color: Colors.white,
+                size: 22,
               ),
             ),
-            const SizedBox(width: 12),
-            // Text or Wave animation
-            if (!_isRecording)
-              const Text(
-                'تسجيل ريكورد',
-                style: TextStyle(
+          ),
+          const SizedBox(width: 12),
+          // Text or Wave animation
+          if (!_isRecording)
+            Text(
+              widget.title ?? 'تسجيل ريكورد',
+              style: const TextStyle(
                   fontSize: 16,
                   color: Color(0xFF1A3353),
-                ),
-              )
-            else
-              Expanded(
-                child: _WaveBars(),
+                  fontWeight: FontWeight.w400),
+            )
+          else
+            Expanded(
+              child: _WaveBars(),
+            ),
+          const SizedBox(width: 12),
+          // Right side - Timer
+          if (_isRecording)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1A3353).withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
               ),
-            const SizedBox(width: 12),
-            // Right side - Timer
-            if (_isRecording)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1A3353).withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  formatDurationSeconds(_seconds),
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Color(0xFF1A3353),
-                    fontWeight: FontWeight.w500,
-                  ),
+              child: Text(
+                formatDurationSeconds(_seconds),
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF1A3353),
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-          ],
-        ),
-      );
+            ),
+        ],
+      ),
+    );
   }
 }
 
