@@ -135,11 +135,8 @@ class _VoiceRecorderBarState extends State<VoiceRecorderBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Container(
-        margin: const EdgeInsets.all(16),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    return  Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: const Color(0xFFF8F9FB),
           borderRadius: BorderRadius.circular(12),
@@ -214,8 +211,7 @@ class _VoiceRecorderBarState extends State<VoiceRecorderBar> {
               ),
           ],
         ),
-      ),
-    );
+      );
   }
 }
 
