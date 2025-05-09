@@ -61,73 +61,73 @@ class _VoiceRecorderExampleState extends State<VoiceRecorderExample> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // ------------------------ Recorder Section ------------------------
-            VoiceRecorderWidget(
-              iconSize: 100, // Size of the recording icon
-              showTimerText: true, // Show the recording timer
-              showSwipeLeftToCancel:
-                  true, // Allow swipe left to cancel the recording
-
-              // Optional: Add custom sounds for recording events
-              // startSoundAsset: "assets/start_warning.mp3",
-              // stopSoundAsset: "assets/start_warning.mp3",
-
-              /////============================= WEB ONly =================================
-              // When recording is finished
-              onRecordedWeb: (url) {
-                setState(() {
-                  recordedAudioBlobUrl = url;
-                });
-              },
-              /////==============================================================
-              // When recording is finished, save the file and display its path
+            VoiceRecorderBar(
               onRecorded: (file) {
-                setState(() {
-                  recordedFile = file; // Store the recorded file
-                });
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: Text(
-                          'Recording saved: ${file.path}')), // Display the recorded file's path
-                );
+                recordedFile = file;
+                setState(() {});
               },
-
-              // When error occurs during recording
-              onError: (error) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: Text(
-                          'Error: $error')), // Display any errors during recording
-                );
-              },
-
-              // If recording was cancelled
-              actionWhenCancel: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                      content: Text(
-                          'Recording Cancelled')), // Notify the user that the recording was cancelled
-                );
-              },
-
-              maxRecordDuration: const Duration(
-                  seconds: 60), // Maximum recording duration (60 seconds)
-              permissionNotGrantedMessage:
-                  'Microphone permission required', // Message when permission is not granted
-              dragToLeftText:
-                  'Swipe left to cancel recording', // Text for drag-to-left action
-              dragToLeftTextStyle: const TextStyle(
-                color: Colors.blueAccent,
-                fontSize: 18,
-              ),
-              cancelDoneText:
-                  'Recording cancelled', // Text displayed when recording is cancelled
-              backgroundColor:
-                  Colors.blueAccent, // Background color of the recorder widget
-              cancelHintColor: Colors.red, // Color of the cancel hint
-              iconColor: Colors.white, // Color of the record icon
-              timerFontSize: 18, // Font size of the timer
             ),
+
+            // ------------------------ Recorder Section ------------------------
+            // VoiceRecorderWidget(
+            //   iconSize: 100, // Size of the recording icon
+            //   showTimerText: true, // Show the recording timer
+
+            //   // Optional: Add custom sounds for recording events
+            //   // startSoundAsset: "assets/start_warning.mp3",
+            //   // stopSoundAsset: "assets/start_warning.mp3",
+
+            //   /////============================= WEB ONly =================================
+            //   // When recording is finished
+            //   onRecordedWeb: (url) {
+            //     setState(() {
+            //       recordedAudioBlobUrl = url;
+            //     });
+            //   },
+            //   /////==============================================================
+            //   // When recording is finished, save the file and display its path
+            //   onRecorded: (file) {
+            //     setState(() {
+            //       recordedFile = file; // Store the recorded file
+            //     });
+            //     ScaffoldMessenger.of(context).showSnackBar(
+            //       SnackBar(
+            //           content: Text(
+            //               'Recording saved: ${file.path}')), // Display the recorded file's path
+            //     );
+            //   },
+
+            //   // When error occurs during recording
+            //   onError: (error) {
+            //     ScaffoldMessenger.of(context).showSnackBar(
+            //       SnackBar(
+            //           content: Text(
+            //               'Error: $error')), // Display any errors during recording
+            //     );
+            //   },
+
+            // If recording was cancelled
+            //   actionWhenCancel: () {
+            //     ScaffoldMessenger.of(context).showSnackBar(
+            //       const SnackBar(
+            //           content: Text(
+            //               'Recording Cancelled')), // Notify the user that the recording was cancelled
+            //     );
+            //   },
+
+            //   maxRecordDuration: const Duration(
+            //       seconds: 60), // Maximum recording duration (60 seconds)
+            //   permissionNotGrantedMessage:
+            //       'Microphone permission required', // Message when permission is not granted
+
+            //   cancelDoneText:
+            //       'Recording cancelled', // Text displayed when recording is cancelled
+            //   backgroundColor:
+            //       Colors.blueAccent, // Background color of the recorder widget
+            //   cancelHintColor: Colors.red, // Color of the cancel hint
+            //   iconColor: Colors.white, // Color of the record icon
+            //   timerFontSize: 18, // Font size of the timer
+            // ),
 
             const SizedBox(height: 10),
             const Divider(), // Divider between sections
